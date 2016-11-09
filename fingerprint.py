@@ -1,14 +1,12 @@
-import os
-import sys
 import urllib2
 from optparse import OptionParser
 
-parser = OptionParser(usage="usage: sudo %prog [options]")
+parser = OptionParser(usage="Usage: python fingerprint.py -t target [-u User-Agent]")
 parser.add_option("-t", "--target", action="store", dest="target", type=str, help="Server to fingerprint")
-parser.add_option("-u", "--user-agent", action="store", dest="uagent", type=str, default="curl/7.37.0", help="The fake(or real) user agent to use. (defaults to \"curl/7.37.0\"")
+parser.add_option("-u", "--user-agent", action="store", dest="uagent", type=str, default="curl/7.37.0", help="The fake(or real) user agent to use. (defaults to \"curl/7.37.0\")")
 (options, args) = parser.parse_args()
 
-#handle colors
+# handle colors
 OK_GREEN = "\033[92m"
 OK_BLUE = "\033[94m"
 ERR = "\033[91m"
@@ -23,7 +21,7 @@ def printGood(s):
 def printErr(s):
     print(ERR + "[!]" + ENDC + " " + s)
 
-
+# make '-t' a required argument
 if not options.target:
     printErr("Missing the required \'-t\' option")
     printErr("Exiting...")
@@ -35,15 +33,15 @@ else:
         response = urllib2.urlopen(request)
         try:
             printGood("Results brought back server type of: " + OK_GREEN + response.info().getheader('Server') + ENDC)
-        except TypeError as typeerr:
-            printErr("Server responded with no server type or a spoofed server type.")
+        except TypeError as typeerr: # if there is no response header
+            printErr("Server responded with no server header.")
             printErr("Exiting...")
         exit(0)
-    except urllib2.URLError as urlerr:
+    except urllib2.URLError as urlerr:  # if the server didn't respond
         printErr("Server didn't respond. (check the URL)")
         printErr("Exiting...")
         exit(1)
-    except ValueError as valerr:
+    except ValueError as valerr:  # if the url is a bad url
         printErr("Please put in a valid url. (with https:// and www.)")
         printErr("Exiting... ")
         exit(1)
