@@ -2,4 +2,4 @@ language: python
 python: 
   - "2.7"
   
-script: fingerprint.py -t https://www.uber.com/ -u Googlebot
+script: python fingerprint.py -t https://www.uber.com/ -u Googlebot
