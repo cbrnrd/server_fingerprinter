@@ -6,7 +6,7 @@ from optparse import OptionParser
 parser = OptionParser(usage="Usage: python fingerprint.py -t target [-u User-Agent]")
 parser.add_option("-t", "--target", action="store", dest="target", type=str, help="Server to fingerprint")
 parser.add_option("-u", "--user-agent", action="store", dest="uagent", type=str, default="curl/7.37.0", help="The fake(or real) user agent to use. (defaults to \"curl/7.37.0\")")
-parser.add_option("-n", "--nmap", action="store_true", dest="nmapScan", default=False, help="Perform an nmap OS scan on the target."
+parser.add_option("-n", "--nmap", action="store_true", dest="nmapScan", default=False, help="Perform an nmap OS scan on the target.")
 (options, args) = parser.parse_args()
 
 # handle colors
