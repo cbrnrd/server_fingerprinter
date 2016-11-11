@@ -3,11 +3,13 @@ import urllib2
 from subprocess import call
 from optparse import OptionParser
 
-parser = OptionParser(usage="Usage: python fingerprint.py -t target [-u User-Agent]")
+parser = OptionParser(usage="Usage: python fingerprint.py -t target [-u User-Agent]\nProper url format: example.com (no http or www)")
 parser.add_option("-t", "--target", action="store", dest="target", type=str, help="Server to fingerprint")
 parser.add_option("-u", "--user-agent", action="store", dest="uagent", type=str, default="curl/7.37.0", help="The fake(or real) user agent to use. (defaults to \"curl/7.37.0\")")
 parser.add_option("-n", "--nmap", action="store_true", dest="nmapScan", default=False, help="Perform an nmap OS scan on the target.")
 (options, args) = parser.parse_args()
+
+url = "http://www." + options.target
 
 # handle colors
 OK_GREEN = "\033[92m"
@@ -39,7 +41,7 @@ else:
             print "\n"
             if options.nmapScan == True:
                 printMsg("Starting nmap scan, hold on...")
-                call(["sudo", "nmap", "-O", "-sV", options.target]) # nmap scan command
+                call(["sudo", "nmap", "-O", "-sV", url]) # nmap scan command
         except TypeError as typeerr: # if there is no response header
             printErr("Server responded with no server header.")
             printErr("Exiting...")
