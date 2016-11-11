@@ -38,7 +38,7 @@ else:
             printGood("Results brought back server type of: " + OK_GREEN + response.info().getheader('Server') + ENDC)
             print "\n"
             if options.nmapScan == True:
-                printMsg("Starting nmap scan, hold on...)
+                printMsg("Starting nmap scan, hold on...")
                 call(["sudo", "nmap", "-O", "-sV", options.target]) # nmap scan command
         except TypeError as typeerr: # if there is no response header
             printErr("Server responded with no server header.")
