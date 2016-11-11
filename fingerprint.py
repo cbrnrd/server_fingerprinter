@@ -33,15 +33,15 @@ if not options.target:
 else:
     try:
         printMsg("Trying to contact %s..." % options.target)
-        request = urllib2.Request(options.target)
+        request = urllib2.Request(url)
         request.add_header('User-Agent', options.uagent)
         response = urllib2.urlopen(request)
         try:
             printGood("Results brought back server type of: " + OK_GREEN + response.info().getheader('Server') + ENDC)
-            print "\n"
             if options.nmapScan == True:
-                printMsg("Starting nmap scan, hold on...")
-                call(["sudo", "nmap", "-O", "-sV", url]) # nmap scan command
+                print "\n"
+		printMsg("Starting nmap scan, hold on...")
+                call(["sudo", "nmap", "-O", "-sV", options.target]) # nmap scan command
         except TypeError as typeerr: # if there is no response header
             printErr("Server responded with no server header.")
             printErr("Exiting...")
