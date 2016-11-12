@@ -37,7 +37,7 @@ else:
         request.add_header('User-Agent', options.uagent)
         response = urllib2.urlopen(request)
         try:
-            printGood("Results brought back server type of: " + OK_GREEN + response.info().getheader('Server') + ENDC)
+            printGood("Results brought back server type of: " + OK_GREEN + response.info().getheader('Server') + ENDC) # main command to get header
             if options.nmapScan == True:
                 print "\n"
 		printMsg("Starting nmap scan, hold on...")
