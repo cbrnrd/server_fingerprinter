@@ -7,6 +7,7 @@ parser = OptionParser(usage="Usage: python fingerprint.py -t target [-u User-Age
 parser.add_option("-t", "--target", action="store", dest="target", type=str, help="Server to fingerprint")
 parser.add_option("-u", "--user-agent", action="store", dest="uagent", type=str, default="curl/7.37.0", help="The fake(or real) user agent to use. (defaults to \"curl/7.37.0\")")
 parser.add_option("-n", "--nmap", action="store_true", dest="nmapScan", default=False, help="Perform an nmap OS scan on the target.")
+parser.add_option("-s", "--search", action="store_true", dest="searchsploit", default=False, help="use searchsploit to search exploit-db for exploits(Requires searchsploit)")
 (options, args) = parser.parse_args()
 
 url = "http://www." + options.target
@@ -37,11 +38,16 @@ else:
         request.add_header('User-Agent', options.uagent)
         response = urllib2.urlopen(request)
         try:
+            serverType = response.info().getheader('Server')
+            printGood("Results brought back server type of: " + OK_GREEN + serverType + ENDC)
             printGood("Results brought back server type of: " + OK_GREEN + response.info().getheader('Server') + ENDC) # main command to get header
             if options.nmapScan == True:
                 print "\n"
-		printMsg("Starting nmap scan, hold on...")
-                call(["sudo", "nmap", "-O", "-sV", options.target]) # nmap scan command
+		printMsg("Starting nmap scan, hold on...") #idek why i have to indent this line like this
+                call(["sudo", "nmap", "-O", "-sV", "-v", options.target]) # nmap scan command
+            if options.searchsploit == True:
+                printMsg("Searching exploit-db.com for " + serverType + "...")
+                call(["searchsploit", serverType])
         except TypeError as typeerr: # if there is no response header
             printErr("Server responded with no server header.")
             printErr("Exiting...")
