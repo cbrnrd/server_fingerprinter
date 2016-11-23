@@ -39,15 +39,18 @@ else:
         response = urllib2.urlopen(request)
         try:
             serverType = response.info().getheader('Server')
-            printGood("Results brought back server type of: " + OK_GREEN + serverType + ENDC)
-            printGood("Results brought back server type of: " + OK_GREEN + response.info().getheader('Server') + ENDC) # main command to get header
+            printGood("Results brought back server type of: " + OK_GREEN + serverType + ENDC) # parse 'Server:' header in response packet
             if options.nmapScan == True:
                 print "\n"
 		printMsg("Starting nmap scan, hold on...") #idek why i have to indent this line like this
                 call(["sudo", "nmap", "-O", "-sV", "-v", options.target]) # nmap scan command
             if options.searchsploit == True:
-                printMsg("Searching exploit-db.com for " + serverType + "...")
-                call(["searchsploit", serverType])
+                try:
+                    printMsg("Searching exploit-db.com for " + serverType + "...")
+                    call(["searchsploit", serverType])
+                except OSError as oserr:
+                    printErr("Searchsploit couldn't be found in the system path.")
+                    printErr("Exiting...")
         except TypeError as typeerr: # if there is no response header
             printErr("Server responded with no server header.")
             printErr("Exiting...")
