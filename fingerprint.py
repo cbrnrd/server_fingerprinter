@@ -8,9 +8,11 @@ parser.add_option("-t", "--target", action="store", dest="target", type=str, hel
 parser.add_option("-u", "--user-agent", action="store", dest="uagent", type=str, default="curl/7.37.0", help="The fake(or real) user agent to use. (defaults to \"curl/7.37.0\")")
 parser.add_option("-n", "--nmap", action="store_true", dest="nmapScan", default=False, help="Perform an nmap OS scan on the target.")
 parser.add_option("-s", "--search", action="store_true", dest="searchsploit", default=False, help="use searchsploit to search exploit-db for exploits(Requires searchsploit)")
+parser.add_option("--sub", action="store_true", dest="subdomain", default="www", help="Prepends a subdomain to the value of domain (Default www.)")
 (options, args) = parser.parse_args()
 
-url = "http://www." + options.target
+
+url = "http://" + options.subdomain + "." + str(options.target)
 
 # handle colors
 OK_GREEN = "\033[92m"
@@ -33,14 +35,13 @@ if not options.target:
     printErr("Exiting...")
 else:
     try:
-        printMsg("Trying to contact %s..." % options.target)
+        printMsg("Trying to contact %s..." % url)
         request = urllib2.Request(url)
         request.add_header('User-Agent', options.uagent)
         response = urllib2.urlopen(request)
         try:
             serverType = response.info().getheader('Server')
             printGood("Results brought back server type of: " + OK_GREEN + serverType + ENDC)
-            printGood("Results brought back server type of: " + OK_GREEN + response.info().getheader('Server') + ENDC) # main command to get header
             if options.nmapScan == True:
                 print "\n"
 		printMsg("Starting nmap scan, hold on...") #idek why i have to indent this line like this
