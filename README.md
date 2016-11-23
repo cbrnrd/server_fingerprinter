@@ -3,7 +3,7 @@
 #### Usage:
 
 ```
-Usage: python fingerprint.py -t example.com [-u User-Agent]
+Usage: python fingerprint.py -t example.com [options]
 
 Options:
   -h, --help            show this help message and exit
