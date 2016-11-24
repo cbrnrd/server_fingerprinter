@@ -41,8 +41,6 @@ else:
         response = urllib2.urlopen(request)
         try:
             serverType = response.info().getheader('Server')
-            printGood("Results brought back server type of: " + OK_GREEN + serverType + ENDC)
-
             printGood("Results brought back server type of: " + OK_GREEN + serverType + ENDC) # parse 'Server:' header in response packet
             if options.nmapScan == True:
                 print "\n"
