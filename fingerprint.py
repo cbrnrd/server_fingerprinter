@@ -9,6 +9,7 @@ parser.add_option("-u", "--user-agent", action="store", dest="uagent", type=str,
 parser.add_option("-n", "--nmap", action="store_true", dest="nmapScan", default=False, help="Perform an nmap OS scan on the target.")
 parser.add_option("-s", "--search", action="store_true", dest="searchsploit", default=False, help="use searchsploit to search exploit-db for exploits(Requires searchsploit)")
 parser.add_option("--sub", action="store_true", dest="subdomain", default="www", help="Prepends a subdomain to the value of domain (Default www.)")
+parser.add_option("-x", "--x-powered", action="store_true", dest="xpowered", default=False, help="Gets `x-powered by' header, if there is one.")
 (options, args) = parser.parse_args()
 
 
@@ -24,7 +25,7 @@ def printMsg(s):
     print(OK_BLUE + "[*]" + ENDC + " " + s)
 
 def printGood(s):
-    print(OK_GREEN + "[*]" + ENDC + " " + s)
+    print(OK_GREEN + "[+]" + ENDC + " " + s)
 
 def printErr(s):
     print(ERR + "[!]" + ENDC + " " + s)
@@ -40,22 +41,28 @@ else:
         request.add_header('User-Agent', options.uagent)
         response = urllib2.urlopen(request)
         try:
+
             serverType = response.info().getheader('Server')
             printGood("Results brought back server type of: " + OK_GREEN + serverType + ENDC) # parse 'Server:' header in response packet
-            if options.nmapScan == True:
+            if options.xpowered == True: # handle -x flag
+                try:
+                    xpwered = response.info().getheader('X-Powered-By')
+                    printGood(url + "is X-Powered-By: " + "\033[93m" + xpwered + "\033[0m")
+                except TypeError as typer:
+                    printErr("Server didn't send back an `X-Powered-By' header. Good for them.")
+            if options.nmapScan == True: # handle -n flag
                 print "\n"
 		printMsg("Starting nmap scan, hold on...") #idek why i have to indent this line like this
                 call(["sudo", "nmap", "-O", "-sV", "-v", options.target]) # nmap scan command
-            if options.searchsploit == True:
+            if options.searchsploit == True: # handle -s flag
                 try:
                     printMsg("Searching exploit-db.com for " + serverType + "...")
                     call(["searchsploit", serverType])
                 except OSError as oserr:
                     printErr("Searchsploit couldn't be found in the system path.")
-                    printErr("Exiting...")
         except TypeError as typeerr: # if there is no response header
             printErr("Server responded with no server header.")
-            printErr("Exiting...")
+        printErr("Exiting...")
         exit(0)
     except urllib2.URLError as urlerr:  # if the server didn't respond
         printErr("Server didn't respond. (check the URL)")
