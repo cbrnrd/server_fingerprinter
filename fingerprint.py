@@ -10,11 +10,14 @@ parser.add_option("-n", "--nmap", action="store_true", dest="nmapScan", default=
 parser.add_option("-s", "--search", action="store_true", dest="searchsploit", default=False, help="use searchsploit to search exploit-db for exploits(Requires searchsploit)")
 parser.add_option("--sub", action="store_true", dest="subdomain", default="www", help="Prepends a subdomain to the value of domain (Default www.)")
 parser.add_option("-x", "--x-powered", action="store_true", dest="xpowered", default=False, help="Gets `x-powered by' header, if there is one.")
+parser.add_option("--ssl", action="store_true", dest="ssl", default=False, help="Uses https instead of http (Default: False)")
 (options, args) = parser.parse_args()
 
-
-url = "http://" + options.subdomain + "." + str(options.target)
-
+if not options.ssl:
+	url = "http://" + options.subdomain + "." + str(options.target)
+else:
+	url = "https://" + options.subdomain + "." + str(options.target)
+	
 # handle colors
 OK_GREEN = "\033[92m"
 OK_BLUE = "\033[94m"
