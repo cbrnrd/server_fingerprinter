@@ -72,6 +72,6 @@ else:
         printErr("Exiting...")
         exit(1)
     except ValueError as valerr:  # if the url is a bad url
-        printErr("Please put in a valid url. (with http(s):// and www.)")
+        printErr("Please put in a valid url. (WITHOUT http:// and www.)")
         printErr("Exiting... ")
         exit(1)
