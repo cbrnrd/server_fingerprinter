@@ -1,5 +1,8 @@
 # Server Fingerprinter
 
+#### Setup:
+`chmod +x fingerprint.py`
+
 #### Usage:
 
 ```
