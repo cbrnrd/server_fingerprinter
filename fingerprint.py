@@ -11,67 +11,74 @@ parser.add_option("-s", "--search", action="store_true", dest="searchsploit", de
 parser.add_option("--sub", action="store_true", dest="subdomain", default="www", help="Prepends a subdomain to the value of domain (Default www.)")
 parser.add_option("-x", "--x-powered", action="store_true", dest="xpowered", default=False, help="Gets `x-powered by' header, if there is one.")
 parser.add_option("--ssl", action="store_true", dest="ssl", default=False, help="Uses https instead of http (Default: False)")
+parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False, help="Use verbose output")
 (options, args) = parser.parse_args()
 
 if not options.ssl:
 	url = "http://" + options.subdomain + "." + str(options.target)
 else:
 	url = "https://" + options.subdomain + "." + str(options.target)
-	
+
 # handle colors
 OK_GREEN = "\033[92m"
 OK_BLUE = "\033[94m"
 ERR = "\033[91m"
 ENDC = "\033[0m"
 
-def printMsg(s):
+
+def print_msg(s):
     print(OK_BLUE + "[*]" + ENDC + " " + s)
 
-def printGood(s):
+
+def print_good(s):
     print(OK_GREEN + "[+]" + ENDC + " " + s)
 
-def printErr(s):
+
+def print_err(s):
     print(ERR + "[!]" + ENDC + " " + s)
 
 # make '-t' a required argument
 if not options.target:
-    printErr("Missing the required \'-t\' option")
-    printErr("Exiting...")
+    print_err("Missing the required \'-t\' option")
+    print_err("Exiting...")
 else:
     try:
-        printMsg("Trying to contact %s..." % url)
+        print_msg("Trying to contact %s..." % url)
         request = urllib2.Request(url)
         request.add_header('User-Agent', options.uagent)
         response = urllib2.urlopen(request)
         try:
-
             serverType = response.info().getheader('Server')
-            printGood("Results brought back server type of: " + OK_GREEN + serverType + ENDC) # parse 'Server:' header in response packet
-            if options.xpowered == True: # handle -x flag
+            print_good("Results brought back server type of: " + OK_GREEN + serverType + ENDC) # parse 'Server:' header in response packet
+            if options.xpowered: # handle -x flag
+                if options.verbose:
+                    print_msg("Performing x-ray... (get it?)")
                 try:
                     xpwered = response.info().getheader('X-Powered-By')
-                    printGood(url + "is X-Powered-By: " + "\033[93m" + xpwered + "\033[0m")
+                    if options.verbose:
+                        print_msg("We got a hit!")
+                    print_good(url + "is X-Powered-By: " + "\033[93m" + xpwered + "\033[0m")
                 except TypeError as typer:
-                    printErr("Server didn't send back an `X-Powered-By' header. Good for them.")
-            if options.nmapScan == True: # handle -n flag
+                    print_err("Server didn't send back an `X-Powered-By' header. Good for them.")
+            if options.nmapScan: # handle -n flag
                 print "\n"
-		printMsg("Starting nmap scan, hold on...") #idek why i have to indent this line like this
+		print_msg("Starting nmap scan, hold on...") #idek why i have to indent this line like this. DO NOT TOUCH THIS YOU WILL SCREW IT UP
                 call(["sudo", "nmap", "-O", "-sV", "-v", options.target]) # nmap scan command
-            if options.searchsploit == True: # handle -s flag
+            if options.searchsploit: # handle -s flag
                 try:
-                    printMsg("Searching exploit-db.com for " + serverType + "...")
+                    print_msg("Searching exploit-db.com for " + serverType + "...")
                     call(["searchsploit", serverType])
                 except OSError as oserr:
-                    printErr("Searchsploit couldn't be found in the system path.")
+                    print_err("Searchsploit couldn't be found in the system path.")
         except TypeError as typeerr: # if there is no response header
-            printErr("Server responded with no server header.")
-        printErr("Exiting...")
+            print_err("Server responded with no server header.")
+        print_err("Exiting...")
         exit(0)
     except urllib2.URLError as urlerr:  # if the server didn't respond
-        printErr("Server didn't respond. (check the URL)")
-        printErr("Exiting...")
+        print_err("Server didn't respond. (check the URL)")
+        print_err("Exiting...")
         exit(1)
     except ValueError as valerr:  # if the url is a bad url
-        printErr("Please put in a valid url. (WITHOUT http:// and www.)")
-        printErr("Exiting... ")
+        print_err("Please put in a valid url. (WITHOUT http:// and www.)")
+        print_err("Exiting... ")
         exit(1)
