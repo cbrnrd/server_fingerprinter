@@ -12,10 +12,15 @@ parser.add_option("--sub", action="store_true", dest="subdomain", default="www",
 parser.add_option("-x", "--x-powered", action="store_true", dest="xpowered", default=False, help="Gets `x-powered by' header, if there is one.")
 parser.add_option("--ssl", action="store_true", dest="ssl", default=False, help="Uses https instead of http (Default: False)")
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False, help="Use verbose output")
+parser.add_option("--raw", action="store_true", dest="raw_url", default=False, help="Use the exact input of -t as url")
 (options, args) = parser.parse_args()
 
-if not options.ssl:
+if options.raw_url:
+	url = str(options.target)
+
+elif not options.ssl:
 	url = "http://" + options.subdomain + "." + str(options.target)
+
 else:
 	url = "https://" + options.subdomain + "." + str(options.target)
 
@@ -79,6 +84,12 @@ else:
         print_err("Exiting...")
         exit(1)
     except ValueError as valerr:  # if the url is a bad url
-        print_err("Please put in a valid url. (WITHOUT http:// and www.)")
-        print_err("Exiting... ")
-        exit(1)
+
+	if options.raw_url:
+		print_err("Use a service in your url (http:// ftp:// etc.)")
+		print_err("Exiting")
+		exit(1)
+	else:
+        	print_err("Please put in a valid url. (WITHOUT http:// and www.)")
+        	print_err("Exiting... ")
+        	exit(1)
