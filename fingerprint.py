@@ -1,5 +1,7 @@
 #!/usr/bin/python
 import urllib2
+import sys
+from time import sleep
 from subprocess import call
 from optparse import OptionParser
 
@@ -8,7 +10,7 @@ parser.add_option("-t", "--target", action="store", dest="target", type=str, hel
 parser.add_option("-u", "--user-agent", action="store", dest="uagent", type=str, default="curl/7.37.0", help="The fake(or real) user agent to use. (defaults to \"curl/7.37.0\")")
 parser.add_option("-n", "--nmap", action="store_true", dest="nmapScan", default=False, help="Perform an nmap OS scan on the target.")
 parser.add_option("-s", "--search", action="store_true", dest="searchsploit", default=False, help="use searchsploit to search exploit-db for exploits(Requires searchsploit)")
-parser.add_option("--sub", action="store_true", dest="subdomain", default="www", help="Prepends a subdomain to the value of domain (Default www.)")
+parser.add_option("--sub", action="store_true", dest="subdomain", default="www", help="Prepends a subdomain to the value of domain")
 parser.add_option("-x", "--x-powered", action="store_true", dest="xpowered", default=False, help="Gets `x-powered by' header, if there is one.")
 parser.add_option("--ssl", action="store_true", dest="ssl", default=False, help="Uses https instead of http (Default: False)")
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False, help="Use verbose output")
@@ -18,11 +20,19 @@ parser.add_option("--raw", action="store_true", dest="raw_url", default=False, h
 if options.raw_url:
 	url = str(options.target)
 
+if len(sys.argv) == 1:
+	print "\n"
+	parser.print_help()
+	exit(1)
+
 elif not options.ssl:
 	url = "http://" + options.subdomain + "." + str(options.target)
 
 else:
 	url = "https://" + options.subdomain + "." + str(options.target)
+
+def sleep(i):
+	time.sleep(i)
 
 # handle colors
 OK_GREEN = "\033[92m"
