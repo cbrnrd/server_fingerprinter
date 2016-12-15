@@ -17,14 +17,16 @@ parser.add_option("-v", "--verbose", action="store_true", dest="verbose", defaul
 parser.add_option("--raw", action="store_true", dest="raw_url", default=False, help="Use the exact input of -t as url")
 (options, args) = parser.parse_args()
 
-if options.raw_url:
-	url = str(options.target)
+
 
 if len(sys.argv) == 1:
 	print "\n"
 	parser.print_help()
 	exit(1)
 
+if options.raw_url:
+	url = str(options.target)
+	
 elif not options.ssl:
 	url = "http://" + options.subdomain + "." + str(options.target)
 
