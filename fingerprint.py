@@ -52,19 +52,19 @@ def print_msg(s):
 
 def print_good(s):
     print(OK_GREEN + "[+]" + ENDC + " " + s)
-target
+
 
 def print_err(s):
     print(ERR + "[!]" + ENDC + " " + s)
 
-	
+
 def portscan(tgt, prt):
 	tgtip = tgt.gethostbyname(tgt)
 	try:
 		for i in range(1, int(prt)):
 			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			result = sock.connect_ex((tgtip, int(prt))
-			if result == 0:
+			if result is 0:
 				print "Port: {} is open".format(i)
 				if i == 22:
 					print_msg("Port 22 is open, trying to fingerprint (OS and ssh server)...")
