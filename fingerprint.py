@@ -115,9 +115,9 @@ else:
                     print_err("Searchsploit couldn't be found in the system path.")
         except TypeError as typeerr: # if there is no response header
             print_err("Server responded with no server header.")
-	    	if scan:
-				print_msg("Doing port scan on {} (tcp/1-1024)".format(target))
-				portscan(target, port)
+	    if scan:
+			print_msg("Doing port scan on {} (tcp/1-1024)".format(target))
+			portscan(target, port)
 				
         print_err("Exiting...")
         exit(0)
