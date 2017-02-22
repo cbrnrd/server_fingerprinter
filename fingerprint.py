@@ -21,10 +21,6 @@ parser.add_option("--raw", action="store_true", dest="raw_url", default=False, h
 parser.add_option("--scan", action="store_true", dest="scan", default=False, help="Do a basic portscan of target if no server is found")
 (options, args) = parser.parse_args()
 
-def spinning_cursor():
-    while True:
-        for cursor in '|/-\\':
-            yield cursor
 
 if len(sys.argv) == 1:
 	print "\n"
