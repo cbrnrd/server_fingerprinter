@@ -71,7 +71,7 @@ def portscan(tgt, prt):
 					req = requests.get(tgt + ":22")
 					res = req.text
 					if not res:
-						print_err("{} returned nothing on port 22".format(tgtip)
+						print_err("{} returned nothing on port 22".format(tgtip))
 					else:
 						print_good("%s returned %s on port 22" % tgtip, res)
 					
