@@ -75,7 +75,7 @@ else:
 	    
 	    if options.req:
 		print_msg("Request to {}".format(url))
-		print request
+		print request.info()
 	
             print_good("Results brought back server type of: " + OK_GREEN + serverType + ENDC) # parse 'Server:' header in response packet
             if options.xpowered: # handle -x flag
