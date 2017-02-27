@@ -18,7 +18,6 @@ parser.add_option("-x", "--x-powered", action="store_true", dest="xpowered", def
 parser.add_option("--ssl", action="store_true", dest="ssl", default=False, help="Uses https instead of http (Default: False)")
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False, help="Use verbose output")
 parser.add_option("--raw", action="store_true", dest="raw_url", default=False, help="Use the exact input of -t as url")
-parser.add_option("--req", action="store_true", dest="req", default=False, help="Print the request used to fingerprint the host")
 (options, args) = parser.parse_args()
 
 
@@ -73,12 +72,6 @@ else:
 	    	print_msg("Printing response headers...")
 	        print response.info()
 	    
-	    if options.req:
-		print_msg("Request to {}".format(url))
-		print request.get_full_url()
-    		print request.get_method()
-    		print dir(request)  # list lots of other stuff in Request
-	
             print_good("Results brought back server type of: " + OK_GREEN + serverType + ENDC) # parse 'Server:' header in response packet
             if options.xpowered: # handle -x flag
                 if options.verbose:
