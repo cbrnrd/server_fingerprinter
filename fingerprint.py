@@ -68,9 +68,9 @@ else:
         response = urllib2.urlopen(request)
         try:
             serverType = response.info().getheader('Server')
-			if options.verbose:
-				print_msg("Printing response headers...")
-				print response.info()
+	    if options.verbose:
+	    	print_msg("Printing response headers...")
+	        print response.info()
             print_good("Results brought back server type of: " + OK_GREEN + serverType + ENDC) # parse 'Server:' header in response packet
             if options.xpowered: # handle -x flag
                 if options.verbose:
@@ -94,6 +94,9 @@ else:
                     print_err("Searchsploit couldn't be found in the system path.")
         except TypeError as typeerr: # if there is no response header
             print_err("Server responded with no server header.")
+	    if options.verbose:
+			print_msg("Printing server response headers just in case")
+			print response.info()
 	    if scan:
 			print_msg("Doing port scan on {} (tcp/1-1024)".format(target))
 			portscan(target, port)
